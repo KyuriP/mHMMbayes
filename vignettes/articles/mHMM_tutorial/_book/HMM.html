@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Multilevel HMM Tutorial - 2&nbsp; Hidden Markov models</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./mHMM.html" rel="next">
+<link href="./preface.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Hidden Markov models</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Multilevel HMM Tutorial</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/emmekeaarts/mHMMbayes" title="Source Code" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle sidebar-tool" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Abstract</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preface.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preface</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./HMM.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Hidden Markov models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mHMM.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multilevel hidden Markov models</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Package <code>mHMMbayes</code></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./specification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Model specification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./startingval.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Starting values</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prior.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Prior distributions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./fittingmodel.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">fittingmodel</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./plotting.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">plotting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-HMM" class="quarto-section-identifier d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Hidden Markov models</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Hidden Markov Models are used for data for which 1) we believe that the distribution generating the observation depends on the state of an underlying, hidden state, and 2) the hidden states follow a Markov process, i.e., the states over time are not independent of one another, but the current state depends on the previous state only (and not on earlier states) <span class="citation" data-cites="Rabiner1989 ephraim2002 cappe2005 zucchini2016">(see e.g., <a href="references.html#ref-Rabiner1989" role="doc-biblioref">Rabiner 1989</a>; <a href="references.html#ref-ephraim2002" role="doc-biblioref">Ephraim and Merhav 2002</a>; <a href="references.html#ref-cappe2005" role="doc-biblioref">Cappé 2005</a>; <a href="references.html#ref-zucchini2016" role="doc-biblioref">Zucchini, MacDonald, and Langrock 2016</a>)</span>. The HMM is a discrete time model: for each point in time <span class="math inline">\(t\)</span>, we have one hidden state that generates one observed event for that time point <span class="math inline">\(t\)</span>.<br>
+Hence, the probability of observing the current outcome <span class="math inline">\(O_t\)</span> is exclusively determined by the current latent state <span class="math inline">\(S_t\)</span>:</p>
+<span class="math display">\[\begin{equation}
+Pr(O_{t} \mid \ O_{t-1}, O_{t-2}, \ldots, O_{1}, \ S_{t}, S_{t-1}, \ldots, S_{1}) = Pr(O_{t} \mid S_{t}).
+\end{equation}\]</span>
+<p>The probability of observing <span class="math inline">\(O_t\)</span> given <span class="math inline">\(S_t\)</span> can have any distribution, e.g., discrete or continuous. In the current version of the package <code>mHMMbayes</code>, only the categorical emission distribution is implemented.<br>
+The hidden states in the sequence take values from a countable finite set of states <span class="math inline">\(S_t = i, i \in \{1, 2, \ldots, m\}\)</span>, where <span class="math inline">\(m\)</span> denotes the number of distinct states, that form the Markov chain, with the Markov property:</p>
+<span class="math display">\[\begin{equation}
+Pr(S_{t+1} \mid \ S_{t}, S_{t-1}, \ldots, S_{1}) = Pr(S_{t+1} \mid S_{t}).
+\end{equation}\]</span>
+<p>That is, the probability of switching to the next state <span class="math inline">\(S_{t+1}\)</span> depends only on the current state <span class="math inline">\(S_t\)</span>. As the HMM is a discrete time model, the duration of a state is represented by the self-transition probabilities <span class="math inline">\(\gamma_{ii}\)</span>, where the probability of a certain time t spent in state <span class="math inline">\(S\)</span> is given by the geometric distribution: <span class="math inline">\(\gamma_{ii}^{t-1}(1-\gamma_{ii})\)</span>.<br>
+The HMM includes three sets of parameters: the initial probabilities of the states <span class="math inline">\(\pi_i\)</span>, the matrix <span class="math inline">\(\mathbf{\Gamma}\)</span> including the transition probabilities <span class="math inline">\(\gamma_{ij}\)</span> between the states, and the state-dependent probability distribution of observing <span class="math inline">\(O_t\)</span> given <span class="math inline">\(S_t\)</span> with parameter set <span class="math inline">\(\boldsymbol{\theta}_i\)</span>. The initial probabilities <span class="math inline">\(\pi_i\)</span> denote the probability that the first state in the hidden state sequence, <span class="math inline">\(S_1\)</span>, is <span class="math inline">\(i\)</span>:</p>
+<span class="math display">\[\begin{equation}
+\pi_i = Pr(S_1 = i) \quad \text{with} \sum_i \pi_i = 1.
+\end{equation}\]</span>
+<p>Often, the initial probabilities of the states <span class="math inline">\(\pi_i\)</span> are assumed to be the stationary distribution implied by the transition probability matrix <span class="math inline">\(\mathbf{\Gamma}\)</span>, that is, the long term steady-state probabilities obtained by <span class="math inline">\(\lim_{T \rightarrow \infty} \mathbf{\Gamma}^T\)</span>. The transition probability matrix <span class="math inline">\(\mathbf{\Gamma}\)</span> with transition probabilities <span class="math inline">\(\gamma_{ij}\)</span> denote the probability of switching from state <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span> to state <span class="math inline">\(j\)</span> at time <span class="math inline">\(t+1\)</span>:</p>
+<span class="math display">\[\begin{equation}
+\gamma_{ij} = Pr(S_{t+1} = j \mid S_{t} = i) \quad \text{with} \sum_j \gamma_{ij} = 1.
+\end{equation}\]</span>
+<p>That is, the transition probabilities <span class="math inline">\(\gamma_{ij}\)</span> in the HMM represent the probability to switch between hidden states rather than between observed acts, as in the MC and CTMC model. The state-dependent probability distribution denotes the probability of observing <span class="math inline">\(O_t\)</span> given <span class="math inline">\(S_t\)</span> with parameter set <span class="math inline">\(\boldsymbol{\theta}_i\)</span>. In case of the package, the state-dependent probability distribution is given by the categorical distribution, and the parameter set <span class="math inline">\(\boldsymbol{\theta}_i\)</span> is the set of state-dependent probabilities of observing categorical outcomes. That is,</p>
+<span class="math display">\[\begin{equation}
+Pr(O_t = o \mid S_t = i) \sim \text{Cat} (\boldsymbol{\theta}_i),
+\end{equation}\]</span>
+<p>for the observed outcomes <span class="math inline">\(o = 1, 2, \ldots, q\)</span> and where <span class="math inline">\(\boldsymbol{\theta}_i = (\theta_{i1}, \theta_{i2}, \ldots, \theta_{iq})\)</span> is a vector of probabilities for each state <span class="math inline">\(S = i, \ldots, m\)</span> with <span class="math inline">\(\sum \theta_i = 1\)</span>, i.e., within each state, the probabilities of all possible outcomes sum up to 1.<br>
+We assume that all parameters in the HMM are independent of <span class="math inline">\(t\)</span>, i.e., we assume a time-homogeneous model. In the vignette <a href="https://cran.r-project.org/web/packages/mHMMbayes/vignettes/estimation-mhmm.pdf">Estimation of the multilevel hidden Markov model</a> we discuss three methods (i.e., Maximum likelihood, Expectation Maximization or Baum-Welch algorithm, and Bayesian estimation) to estimate the parameters of an HMM. In the package <code>mHMMbayes</code>, we chose to use Bayesian estimation because of its flexibility, which we will require in the multilevel framework of the model.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography" style="display: none">
+<div id="ref-cappe2005" class="csl-entry" role="doc-biblioentry">
+Cappé, E. AND Rydén, O. AND Moulines. 2005. <em>Inference in Hidden <span>M</span>arkov Models</em>. New York: Springer.
+</div>
+<div id="ref-ephraim2002" class="csl-entry" role="doc-biblioentry">
+Ephraim, Yariv, and Neri Merhav. 2002. <span>“Hidden <span>M</span>arkov Processes.”</span> <em>Information Theory, IEEE Transactions on</em> 48 (6): 1518–69.
+</div>
+<div id="ref-Rabiner1989" class="csl-entry" role="doc-biblioentry">
+Rabiner, Lawrence R. 1989. <span>“A Tutorial on Hidden <span>M</span>arkov Models and Selected Applications in Speech Recognition.”</span> <em>Proceedings of the IEEE</em> 77 (2): 257–86.
+</div>
+<div id="ref-zucchini2016" class="csl-entry" role="doc-biblioentry">
+Zucchini, Walter, Iain L MacDonald, and Roland Langrock. 2016. <em>Hidden <span>M</span>arkov Models for Time Series: An Introduction Using <span>R</span></em>. Boca Raton: CRC Press.
+</div>
+</div>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./preface.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Preface</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./mHMM.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Multilevel hidden Markov models</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

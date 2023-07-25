@@ -1,0 +1,16 @@
+{
+  "hash": "c688c41ab8ea423a6bae348626569244",
+  "result": {
+    "markdown": "# Model specification {#sec-modspec}\n\n\nLet's proceed with fitting a simple 2-state multilevel model using the mHMM function. First, we need to set some general model properties and starting values:\n\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# Load the mHMMbayes package \nlibrary(mHMMbayes)\n\n# Specify general model properties:\nm <- 2\nn_dep <- 4\nq_emiss <- c(3, 2, 3, 2)\n\n# Specify starting values for transition matrix (TM) and emission probabilities (EM)\nstart_TM <- diag(.8, m)\nstart_TM[lower.tri(start_TM) | upper.tri(start_TM)] <- .2\nstart_EM <- list(matrix(c(0.05, 0.90, 0.05, \n                          0.90, 0.05, 0.05), byrow = TRUE,\n                         nrow = m, ncol = q_emiss[1]), # vocalizing patient\n                  matrix(c(0.1, 0.9, \n                           0.1, 0.9), byrow = TRUE, nrow = m,\n                         ncol = q_emiss[2]), # looking patient\n                  matrix(c(0.90, 0.05, 0.05, \n                           0.05, 0.90, 0.05), byrow = TRUE,\n                         nrow = m, ncol = q_emiss[3]), # vocalizing therapist\n                  matrix(c(0.1, 0.9, \n                           0.1, 0.9), byrow = TRUE, nrow = m,\n                         ncol = q_emiss[4])) # looking therapist\n```\n:::\n\n\nThe first line of code loads the `mHMMbayes` package and the `nonverbal` data.  \nThen, we specify the general model properties:  \n\n- the number of states used is set by `m <- 2`.\n- the number of dependent variables in the dataset used to infer the hidden states is specified by `n_dep <- 4`.\n- the number of categorical outcomes for each of the dependent variables is specified by `q_emiss <- c(3, 2, 3, 2)`.\n\nThe subsequent lines of code specify the starting values for the transition probability matrix (`start_TM`) and the emission distributions (`start_EM`). Next, we will delve into more detail on how to specify these starting values.\n",
+    "supporting": [
+      "specification_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "index.qmd": {
+    "index.html": "d9a86331"
+  },
+  "intro.qmd": {
+    "intro.html": "e572d1a0"
+  },
+  "summary.qmd": {
+    "summary.html": "1ba5d185"
+  },
+  "references.qmd": {
+    "references.html": "b6441fa0"
+  },
+  "introHMM.qmd": {
+    "introHMM.html": "38cd6eae"
+  },
+  "preface.qmd": {
+    "preface.html": "0673b303"
+  },
+  "HMM.qmd": {
+    "HMM.html": "d8e71f6d"
+  },
+  "mHMM.qmd": {
+    "mHMM.html": "a8521ec6"
+  },
+  "data.qmd": {
+    "data.html": "ee1ca931"
+  },
+  "specification.qmd": {
+    "specification.html": "6400a86e"
+  },
+  "startingval.qmd": {
+    "startingval.html": "86d5e1fa"
+  },
+  "prior.qmd": {
+    "prior.html": "9e7a6c45"
+  },
+  "fittingmodel.qmd": {
+    "fittingmodel.html": "2910ebcb"
+  },
+  "plotting.qmd": {
+    "plotting.html": "d225001b"
+  }
+}

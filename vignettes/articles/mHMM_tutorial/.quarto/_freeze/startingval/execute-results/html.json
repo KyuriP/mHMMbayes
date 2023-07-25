@@ -1,0 +1,14 @@
+{
+  "hash": "fbc04484a9ce1c2cf824cd9794e42408",
+  "result": {
+    "markdown": "# Starting values {#sec-startval}\n\nPreviously in @sec-dat, we specified the starting values for the transition probability matrix (`start_TM`) and the emission distributions (`start_EM`), which are given to the model in the argument `start_val` (see the code snippet provided in @sec-prior). \n\nThese starting values are used for the first run of the forward backward algorithm. Although the hidden states cannot be observed, one often has an idea for probable compositions of the states. \n\nIn this example, we expect that there is a state in which the patient mostly speaks, and the therapist is silent, and a state during which the patient is silent and the therapists speaks. In addition, we expect that during both states, the therapist and the patient will be mainly looking at each other instead of looking away. \n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n```\n[[1]]\n     [,1] [,2] [,3]\n[1,] 0.05 0.90 0.05\n[2,] 0.90 0.05 0.05\n\n[[2]]\n     [,1] [,2]\n[1,]  0.1  0.9\n[2,]  0.1  0.9\n\n[[3]]\n     [,1] [,2] [,3]\n[1,] 0.90 0.05 0.05\n[2,] 0.05 0.90 0.05\n\n[[4]]\n     [,1] [,2]\n[1,]  0.1  0.9\n[2,]  0.1  0.9\n```\n:::\n:::\n\n\n\nOne usually also has some (vague) idea on likely and unlikely switches between states, and the size of self-transition probabilities. In this example, we think a state will usually last quite some seconds, and thus expect a rather high self-transition probability. \n\nAll these ideas can be used to construct a set of sensible starting values. Using sensible starting values increases convergence speed, and often prevents a problem called *label switching*. Hence, using random or uniform starting values is not recommended, and a default option to do so is not included in the package. \n\n::: {.callout-note}\nNote that it is strongly advised to check model convergence and label switching. That is, one should check if the algorithm reaches the same solution when a set of different (but often conceptually similar) starting values are used, and if label switching is not a problem. See the section @sec-convergence for an example. See the vignette [Estimation of the multilevel hidden Markov model](https://cran.r-project.org/web/packages/mHMMbayes/vignettes/estimation-mhmm.pdf) for more information on the forward backward algorithm and on the problem of label switching.\n:::\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "hash": "d8df1b7c86e9107cf172bc9feb384345",
+  "result": {
+    "markdown": "# Data {#sec-dat}\nWe illustrate using the `mHMMbayes` package using the embedded example data `nonverbal`. The data contains the nonverbal communication of *10 patient-therapist couples*, recorded for *15 minutes* at a frequency of *1 observation per second* (= 900 observations per couple).\\\nThe following variables are contained in the dataset:\n\n-   **`id`**: id variable of patient - therapist couple to distinguish which observation belongs to which couple.\n-   **`p_verbalizing`**: verbalizing behavior of the patient, consisting of `1` = not verbalizing, `2` = verbalizing, `3` = back channeling.\n-   **`p_looking`**: looking behavior of the patient, consisting of `1` = not looking at therapist, `2` = looking at therapist.\n-   **`t_verbalizing`**: verbalizing behavior of the therapist, consisting of `1` = not verbalizing, `2` = verbalizing, `3` = back channeling.\n-   **`t_looking`**: looking behavior of the therapist, consisting of `1` = not looking at patient, `2` = looking at patient. The top 6 rows of the dataset are provided below.\n\n\n\n\n\n<p>Below is a glimpse of how the data appears.</p>\n\n<center>\n\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n```\n  id p_vocalizing p_looking t_vocalizing t_looking\n1  1            2         2            2         2\n2  1            2         2            1         2\n3  1            2         2            2         2\n4  1            2         2            2         2\n5  1            2         2            2         2\n6  1            2         2            1         2\n```\n:::\n:::\n\n\n</center>\n\nWhen we plot the data of the first 5 minutes (= the first 300 observations) of the first couple, we get the following:\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](data_files/figure-html/plot observed data-1.png){width=691.2}\n:::\n:::\n\n\nWe can, for example, observe that both the patient and the therapist are mainly looking at each other during the observed 5 minutes. During the first minute, the patient is primarily speaking. During the second minute, the therapists starts, after which the patient takes over while the therapist is back channeling.\n",
+    "supporting": [
+      "data_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
