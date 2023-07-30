@@ -73,7 +73,6 @@ Graphically displaying the transition probabilities becomes more informative as 
 #| echo: false
 #| out-width: 70%
 plot(obtain_gamma(out_4st))
-
 ```
 
 
